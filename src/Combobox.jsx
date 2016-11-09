@@ -27,6 +27,7 @@ const Combobox = React.createClass({
     onChange: PropTypes.func,
     showHour: PropTypes.bool,
     showSecond: PropTypes.bool,
+    showAmPm: PropTypes.bool,
     hourOptions: PropTypes.array,
     minuteOptions: PropTypes.array,
     secondOptions: PropTypes.array,
@@ -108,6 +109,24 @@ const Combobox = React.createClass({
       />
     );
   },
+  getAmPmSelect(ampm){
+    const { prefixCls, ampmOptions, showAmPm, defaultOpenValue } = this.props
+    if(!showAmPm){
+      return null;
+    }
+
+    const disabledOptions = [];
+    return(
+      <Select
+        prefixCls={prefixCls} 
+        options={ampmOptions.map(option -> formatOption(option, disabledOptions))}
+        selectedIndex={ampmOptions.indexOf(ampm)}
+        type="ampm"
+        onSelect={this.onItemChange}
+        onMouseEnter={this.onEnterSelectPanel.bind(this, 'ampm')}
+      />)
+
+  },
 
   render() {
     const { prefixCls, defaultOpenValue } = this.props;
@@ -117,6 +136,7 @@ const Combobox = React.createClass({
         {this.getHourSelect(value.hour())}
         {this.getMinuteSelect(value.minute())}
         {this.getSecondSelect(value.second())}
+        {this.getAmPmSelect(value.format('a'))}
       </div>
     );
   },

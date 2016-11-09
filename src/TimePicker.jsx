@@ -29,6 +29,7 @@ const Picker = React.createClass({
     placeholder: PropTypes.string,
     format: PropTypes.string,
     showHour: PropTypes.bool,
+    showAmPm: PropTypes.bool,
     style: PropTypes.object,
     className: PropTypes.string,
     showSecond: PropTypes.bool,
@@ -53,7 +54,8 @@ const Picker = React.createClass({
       defaultOpenValue: moment(),
       allowEmpty: true,
       showHour: true,
-      showSecond: true,
+      showSecond: false,
+      showAmPm: true,
       disabledHours: noop,
       disabledMinutes: noop,
       disabledSeconds: noop,
@@ -125,13 +127,21 @@ const Picker = React.createClass({
     if (format) {
       return format;
     }
-    if (!this.props.showSecond) {
-      return 'HH:mm';
+    if(!this.props.showAmPm){
+      if (!this.props.showSecond) {
+        return 'HH:mm';
+      }
+      if (!this.props.showHour) {
+        return 'mm:ss';
+      }
+      return 'HH:mm:ss';
+    }else{
+      if (!this.props.showSecond) {
+        return 'hh:mm a';
+      }
+      return'hh:mm:ss a';
     }
-    if (!this.props.showHour) {
-      return 'mm:ss';
-    }
-    return 'HH:mm:ss';
+    
   },
 
   getPanelElement() {
@@ -152,6 +162,7 @@ const Picker = React.createClass({
         defaultOpenValue={defaultOpenValue}
         showHour={showHour}
         onEsc={this.onEsc}
+        showAmPm={showAmPm}
         showSecond={showSecond}
         allowEmpty={allowEmpty}
         format={this.getFormat()}
@@ -190,7 +201,7 @@ const Picker = React.createClass({
     } = this.props;
     const { open, value } = this.state;
     let popupClassName;
-    if (!showHour || !showSecond) {
+    if (!showHour || !showSecond || !showAmPm) {
       popupClassName = `${prefixCls}-panel-narrow`;
     }
     return (

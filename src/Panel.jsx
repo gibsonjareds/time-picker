@@ -35,6 +35,7 @@ const Panel = React.createClass({
     allowEmpty: PropTypes.bool,
     showHour: PropTypes.bool,
     showSecond: PropTypes.bool,
+    showAmPm: PropTypes.bool,
     onClear: PropTypes.func,
     addon: PropTypes.func,
   },
@@ -88,7 +89,7 @@ const Panel = React.createClass({
   render() {
     const {
       prefixCls, className, placeholder, disabledHours, disabledMinutes,
-      disabledSeconds, hideDisabledOptions, allowEmpty, showHour, showSecond,
+      disabledSeconds, hideDisabledOptions, allowEmpty, showHour, showSecond, showAmPm,
       format, defaultOpenValue, clearText, onEsc, addon,
     } = this.props;
     const {
@@ -98,9 +99,11 @@ const Panel = React.createClass({
     const disabledMinuteOptions = disabledMinutes(value ? value.hour() : null);
     const disabledSecondOptions = disabledSeconds(value ? value.hour() : null,
       value ? value.minute() : null);
-    const hourOptions = generateOptions(24, disabledHourOptions, hideDisabledOptions);
+
+    const hourOptions = showAmPm ? generateOptions( 13, [0], true) : generateOptions(24, disabledHourOptions, hideDisabledOptions);
     const minuteOptions = generateOptions(60, disabledMinuteOptions, hideDisabledOptions);
     const secondOptions = generateOptions(60, disabledSecondOptions, hideDisabledOptions);
+    const ampmOptions = ['am', 'pm']
 
     return (
       <div className={classNames({ [`${prefixCls}-inner`]: true, [className]: !!className })}>
@@ -116,6 +119,7 @@ const Panel = React.createClass({
           hourOptions={hourOptions}
           minuteOptions={minuteOptions}
           secondOptions={secondOptions}
+          ampmOptions={ampmOptions}
           disabledHours={disabledHours}
           disabledMinutes={disabledMinutes}
           disabledSeconds={disabledSeconds}
@@ -131,9 +135,11 @@ const Panel = React.createClass({
           onChange={this.onChange}
           showHour={showHour}
           showSecond={showSecond}
+          showAmPm={showAmPm}
           hourOptions={hourOptions}
           minuteOptions={minuteOptions}
           secondOptions={secondOptions}
+          ampmOptions={ampmOptions}
           disabledHours={disabledHours}
           disabledMinutes={disabledMinutes}
           disabledSeconds={disabledSeconds}
